@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Keluarga</title>
+		<div th:replace="fragments/header :: header-css"/>
+	</head>
+	<body>
+	<div th:replace="fragments/header :: header"/>
+		<div class="container">
+			<h3 th:text="'Lihat Data Keluarga - ' + ${keluarga.nomor_kk}"></h3>
+			<p th:text="'NKK : ' + ${keluarga.nomor_kk}"></p>
+			<p th:text="'Alamat : ' + ${keluarga.alamat}"></p>
+			<p th:text="'RT/RW : ' + ${keluarga.rt} + '/' + ${keluarga.rw}"></p>
+			<p th:text="'Kelurahan/Desa : ' + ${kelurahan.nama_kelurahan}"></p>
+			<p th:text="'Kecamatan :  ' + ${kecamatan.nama_kecamatan}"></p>
+			<p th:text="'Kota : ' + ${kota.nama_kota}"></p>
+			
+			<table border="1">
+				<thead>
+					<tr>
+						<td>No</td>
+						<td>Nama Lengkap</td>
+						<td>NIK</td>
+						<td>Jenis Kelamin</td>
+						<td>Tempat Lahir</td>
+						<td>Tanggal Lahir</td>
+						<td>Agama</td>
+						<td>Pekerjaan</td>
+						<td>Status Perkawinan</td>
+						<td>Status dalam Keluarga</td>
+						<td>Kewarganegaraan</td>
+					</tr>
+				</thead>
+				<tbody th:each="anggota,iterationStatus: ${keluarga.anggotaKeluarga}">
+					<tr>
+						<td th:text="${iterationStatus.count}"></td>
+						<td th:text="${anggota.nama}"></td>
+						<td th:text="${anggota.nik}"></td>
+						<td th:text="${anggota.convertJenisKelamin()}"></td>
+						<td th:text="${anggota.tempat_lahir}"></td>
+						<td th:text="${anggota.tanggal_lahir}"></td>
+						<td th:text="${anggota.agama}"></td>
+						<td th:text="${anggota.pekerjaan}"></td>
+						<td th:text="${anggota.status_perkawinan}"></td>
+						<td th:text="${anggota.status_dalam_keluarga}"></td>
+						<td th:text="${anggota.convertWni()}"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		
+		
+	</body>
+</html>

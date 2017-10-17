@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>Insert title here</title>
+		<div th:replace="fragments/header :: header-css"/>
+	</head>
+	<body>
+		<div th:replace="fragments/header :: header"/>
+	
+
+    
+	<div class="container">
+		<h1>CARI PENDUDUK</h1>
+		<form action="/penduduk" method="get">
+			<input type="text" name="nik" id="nik"/>
+			<button>Cari</button>
+		</form>
+		<hr/>
+		<h1>CARI KELUARGA</h1>
+		<form action="/keluarga" method="get">
+			<input type="text" name="nkk" id="nik"/>
+			<button>Cari</button>
+		</form>
+		</div>
+	</body>
+</html>

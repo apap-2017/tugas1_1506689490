@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Update Keluarga</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<div th:replace="fragments/header :: header-css"/>
+	</head>
+	<body>
+	
+		<div th:replace="fragments/header :: header"/>
+		<div class="container">
+			<div th:if="${isError}">
+				<h1>ERROR!</h1>
+				<p>Lengkapi seluruh data terlebih dahulu dengan valid</p>
+			</div>
+			<div th:if="${isUpdated}">
+			<h1>Sukses!</h1>
+			<p th:text="'Keluarga dengan NKK ' + ${nkk} + ' berhasil diubah'"></p>
+			</div>
+			<form th:object="${keluarga}" th:action="'/keluarga/ubah' + ${keluarga.nomor_kk}" method="post">
+				<input type="hidden" th:field="*{nomor_kk}"/>
+				<input type="hidden" th:field="*{id}"/>
+				<div>
+					<label for="alamat">Alamat</label><input th:field="*{alamat}" type="text" name="alamat"/>
+				</div>
+				<div>
+					<label for="rt">RT</label><input th:field="*{rt}" type="text" name="rt"/>
+				</div>
+				<div>
+					<label for="rw">RW</label><input th:field="*{rw}" type="text" name="rw"/>
+				</div>
+				<div>
+					<select id="kota">
+						<option value="">Pilih Kota</option>
+					</select>
+				</div>
+				<div>
+					<select id="kecamatan">
+						<option value="">Pilih Kecamatan</option>
+					</select>
+				</div>
+				<div>
+					<select id="kelurahan" th:field="*{id_kelurahan}">
+						<option value="0">Pilih Kelurahan</option>
+					</select>
+				</div>
+				<button>Update</button>
+			</form>
+			</div>
+		
+	</body>
+</html>
+<script th:inline="javascript">
+/*<![CDATA[*/
+$(document).ready(function(){
+	var id_kota = [[${id_kota}]];
+	var id_kecamatan = [[${id_kecamatan}]];
+	var id_kelurahan = [[${id_kelurahan}]];
+	$.ajax({
+        type: "GET", 
+        url: "/kota",
+        contentType: "application/json",
+        success: function (data) {
+            var out = '<option value="">Pilih Kota</option>';
+            
+            for(var i = 0; i < data.length; i++){
+            	if(id_kota == data[i]['id']){
+            		out += '<option value="'+ data[i]["id"]+'" selected>'+ data[i]["nama_kota"] +'</option>';	
+            	}else {
+            		out += '<option value="'+ data[i]["id"]+'">'+ data[i]["nama_kota"] +'</option>';
+            	}
+            	
+            }
+            $("#kota").html(out);
+        }
+	});
+	
+	$.ajax({
+        type: "GET", 
+        url: "/kecamatan?id_kota=" + id_kota,
+        contentType: "application/json",
+        success: function (data) {
+        	var out = '<option value="">Pilih Kecamatan</option>';
+        	
+            for(var i = 0; i < data.length; i++){
+            	if(id_kecamatan == data[i]['id']){
+            		out += '<option value="'+ data[i]["id"]+'" selected>'+ data[i]["nama_kecamatan"] +'</option>';	
+            	}else {
+            		out += '<option value="'+ data[i]["id"]+'">'+ data[i]["nama_kecamatan"] +'</option>';
+            	}
+            	
+            }
+            $("#kecamatan").html(out);
+            
+        }
+	});
+	
+	$.ajax({
+        type: "GET", 
+        url: "/kelurahan?id_kecamatan=" + id_kecamatan,
+        contentType: "application/json",
+        success: function (data) {
+        	var out = "";
+            for(var i = 0; i < data.length; i++){
+            	if(id_kelurahan == data[i]['id']){
+            		out += '<option value="'+ data[i]["id"]+'" selected>'+ data[i]["nama_kelurahan"] +'</option>';
+            	}else{
+            		out += '<option value="'+ data[i]["id"]+'">'+ data[i]["nama_kelurahan"] +'</option>';	
+            	}
+            	
+            }
+            $("#kelurahan").html(out);
+        }
+	});
+	
+	$("#kota").change(function(){
+		var id_kota = $("#kota").val();
+		$("#kelurahan").html('<option value="">Pilih Kelurahan</option>');
+		$.ajax({
+	        type: "GET", 
+	        url: "/kecamatan?id_kota=" + id_kota,
+	        contentType: "application/json",
+	        success: function (data) {
+	        	var out = '<option value="">Pilih Kecamatan</option>';
+	            for(var i = 0; i < data.length; i++){
+	            	out += '<option value="'+ data[i]["id"]+'">'+ data[i]["nama_kecamatan"] +'</option>';
+	            }
+	            $("#kecamatan").html(out);
+	            
+	        }
+		});
+	});
+	
+	$("#kecamatan").change(function(){
+		var id_kecamatan = $("#kecamatan").val();
+
+		$.ajax({
+	        type: "GET", 
+	        url: "/kelurahan?id_kecamatan=" + id_kecamatan,
+	        contentType: "application/json",
+	        success: function (data) {
+            	var out = "";
+	            for(var i = 0; i < data.length; i++){
+	            	out += '<option value="'+ data[i]["id"]+'">'+ data[i]["nama_kelurahan"] +'</option>';
+	            }
+	            $("#kelurahan").html(out);
+	        }
+		});
+	})
+
+});
+/*]]>*/
+
+
+</script>

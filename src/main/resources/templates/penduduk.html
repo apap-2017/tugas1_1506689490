@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>Insert title here</title>
+		<div th:replace="fragments/header :: header-css"/>
+	</head>
+	<body>
+		<div th:replace="fragments/header :: header"/>
+		<div class="container">
+		
+		
+			<div th:if="${isChanged}">
+				<h1>Sukses !</h1>
+				<p th:text="'Penduduk dengan NIK ' + ${penduduk.nik} + ' sudah tidak aktif'"></p>
+			</div>
+			<h3 th:text="'Lihat Data Penduduk - ' + ${penduduk.nik}"></h3>
+			<p th:text="'NIK : ' + ${penduduk.nik}"></p>
+			<p th:text="'Tempat/Tanggal Lahir : ' + ${penduduk.tempat_lahir} + ', ' + ${penduduk.tanggal_lahir}"></p>
+			<p th:text="'ALamat : ' + ${penduduk.nik}"></p>
+			<p th:text="'RT/RW : ' + ${keluarga.rt} + '/' + ${keluarga.rw}"></p>
+			<p th:text="'Kelurahan/Desa : ' + ${kelurahan.nama_kelurahan}"></p>
+			<p th:text="'Kecamatan :  ' + ${kecamatan.nama_kecamatan}"></p>
+			<p th:text="'Kota : ' + ${kota.nama_kota}"></p>
+			<p th:text="'Golongan Darah :  ' + ${penduduk.golongan_darah}"></p>
+			<p th:text="'Agama : ' + ${penduduk.agama}"></p>
+			<p th:text="'Status Perkawinan : ' + ${penduduk.status_perkawinan}"></p>
+			<p th:text="'Pekerjaan  : ' + ${penduduk.pekerjaan}"></p>
+			<p th:text="'Kewarganegaraan : ' + ${penduduk.convertWni()}"></p>
+			<p th:text="'Status Kemtian :  ' + ${penduduk.convertWafat()}"></p>
+			<form th:object="${penduduk}" action="/penduduk" method="post" th:if="${penduduk.is_wafat == 0}">
+				<input type="hidden" name="nik" th:value="${penduduk.nik}"/>
+				<input type="hidden" name="id_keluarga" th:value="${keluarga.id}"/>
+				<button class="btn btn-danger">Nonaktifkan</button>
+			</form>
+			
+			<a class="btn btn-primary" th:href="'/penduduk/ubah/' + ${penduduk.nik}">Edit</a>
+		</div>
+	</body>
+</html>

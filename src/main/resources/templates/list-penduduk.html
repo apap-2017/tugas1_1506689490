@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Add Keluarga</title>
+		<div th:replace="fragments/header :: header-css"/>
+		<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.css"/>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
+	</head>
+	<body>
+		<div th:replace="fragments/header :: header"/>
+		<div class="container">
+			<div th:if="${isResult == false}">
+				<h2 th:text="'Lihat Data Penduduk di Kota ' + ${kota.nama_kota} + ' Kecamatan ' + ${kecamatan.nama_kecamatan} + ' Kelurahan ' + ${kelurahan.nama_kelurahan}"></h2>
+			</div>
+			<div th:if="${isResult}">
+				<form th:object="${keluarga}" action="/penduduk/cari" method="get" th:if="${isResult}">
+					<div>
+						<select id="kota" name="kota" th:disabled="${isKecamatan}">
+							<option value="">Pilih Kota</option>
+							<option th:each="kota : ${kota}" th:value="${kota.id}" th:selected="${selected_id_kota == kota.id}" th:text="${kota.nama_kota}"></option>
+						</select>
+					</div>
+					<div th:if="${isKecamatan}">
+						<select id="kecamatan" name="kecamatan" th:disabled="${isKelurahan}">
+							<option value="0">Pilih Kecamatan</option>
+							<option th:each="kecamatan : ${kecamatan}" th:selected="${selected_id_kecamatan == kecamatan.id}" th:value="${kecamatan.id}" th:text="${kecamatan.nama_kecamatan}"></option>
+						</select>
+					</div>
+					<div th:if="${isKelurahan}" name="kelurahan">
+						<select id="kelurahan" name="kelurahan">
+							<option value="0">Pilih Kelurahan</option>
+							<option th:each="kelurahan : ${kelurahan}" th:value="${kelurahan.id}" th:text="${kelurahan.nama_kelurahan}"></option>
+						</select>
+					</div>
+					<button id="cari">cari</button>
+				</form>
+			</div>
+			<div th:if="${isResult == false}">
+				<h4>Penduduk dengan usia termuda</h4>
+				<table id="termuda" border="1">
+					<tbody>
+					</tbody>
+				</table>
+				<br/>
+				<h4>Penduduk dengan usia tertua</h4>
+				<table id="tertua" border="1">
+					<tbody>
+					</tbody>
+				</table>
+				<br/>
+				
+				<table id="example" border="1">
+					<thead>
+						<tr>
+							<th>Nik</th>
+							<th>Nama</th>
+							<th>Nik</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+					</tbody>
+				</table>
+			</div>
+		</div>
+		
+		
+		
+	</body>
+</html>
+<script th:inline="javascript">
+/*<![CDATA[*/
+$(document).ready(function(){
+	$("#cari").click(function(){
+		$("select").prop('disabled', false);
+	});
+	
+	
+	var list_penduduk = [[${list_penduduk}]];
+	if(list_penduduk != null){
+		var pendudukMax = list_penduduk[0];
+		var pendudukMin = list_penduduk[0];
+		for(var i = 1 ; i < list_penduduk.length; i++){
+			var penduduk = list_penduduk[i];
+			var tempDate = penduduk['tanggal_lahir'].split("-");
+			var tempDateMax =  pendudukMax['tanggal_lahir'].split("-");
+			var tempDateMin = pendudukMin['tanggal_lahir'].split("-");
+			var date = new Date(tempDate[2], tempDate[0] - 1, tempDate[1]);
+			var dateMax = new Date(tempDateMax[2], tempDateMax[0] - 1, tempDateMax[1]);
+			var dateMin = new Date(tempDateMin[2], tempDateMin[0] - 1, tempDateMin[1]);
+			
+			if(date > dateMax){
+				pendudukMax = penduduk;
+			}
+			if(date  < dateMin){
+				pendudukMin = penduduk;
+			}
+			
+			penduduk['jenis_kelamin'] = penduduk['jenis_kelamin'] == 0 ? 'Pria' : 'Wanita';
+		}
+		
+		
+		var termudaContent = "<tr>";
+		termudaContent += "<td>Nik</td>";
+		termudaContent += "<td>" + pendudukMin['nik'] + "</td>";
+		termudaContent += "</tr><tr>";
+		termudaContent += "<td>Nama</td>";
+		termudaContent += "<td>" + pendudukMin['nama'] + "</td>";
+		termudaContent += "</tr><tr>";
+		termudaContent += "<td>Tanggal lahir</td>";
+		termudaContent += "<td>" + pendudukMin['tanggal_lahir'] + "</td>";
+		termudaContent += "</tr>";
+		
+		var tertuaContent = "<tr>";
+		tertuaContent += "<td>Nik</td>";
+		tertuaContent += "<td>" + pendudukMax['nik'] + "</td>";
+		tertuaContent += "</tr><tr>";
+		tertuaContent += "<td>Nama</td>";
+		tertuaContent += "<td>" + pendudukMax['nama'] + "</td>";
+		tertuaContent += "</tr><tr>";
+		tertuaContent += "<td>Tanggal lahir</td>";
+		tertuaContent += "<td>" + pendudukMax['tanggal_lahir'] + "</td>";
+		tertuaContent += "</tr>";
+		
+		$("#termuda tbody").append(termudaContent);
+		$("#tertua tbody").append(tertuaContent);
+		$('#example').DataTable( {
+	        data: list_penduduk,
+	        columns: [
+	            { "data": "nik" },
+	            { "data": "nama" },
+	            { "data": "jenis_kelamin" }
+	        ]
+	    });	
+	}
+	
+	
+	
+
+});
+/*]]>*/
+
+
+</script>
