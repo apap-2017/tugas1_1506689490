@@ -14,7 +14,7 @@
 			<p th:text="'Kelurahan/Desa : ' + ${kelurahan.nama_kelurahan}"></p>
 			<p th:text="'Kecamatan :  ' + ${kecamatan.nama_kecamatan}"></p>
 			<p th:text="'Kota : ' + ${kota.nama_kota}"></p>
-			
+			<a class="btn btn-success" th:href="'/keluarga/ubah/' + ${keluarga.nomor_kk}">Edit</a>
 			<table border="1">
 				<thead>
 					<tr>
@@ -31,8 +31,8 @@
 						<td>Kewarganegaraan</td>
 					</tr>
 				</thead>
-				<tbody th:each="anggota,iterationStatus: ${keluarga.anggotaKeluarga}">
-					<tr>
+				<tbody>
+					<tr th:each="anggota,iterationStatus: ${keluarga.anggotaKeluarga}">
 						<td th:text="${iterationStatus.count}"></td>
 						<td th:text="${anggota.nama}"></td>
 						<td th:text="${anggota.nik}"></td>

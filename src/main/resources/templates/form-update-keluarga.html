@@ -17,7 +17,7 @@
 			<h1>Sukses!</h1>
 			<p th:text="'Keluarga dengan NKK ' + ${nkk} + ' berhasil diubah'"></p>
 			</div>
-			<form th:object="${keluarga}" th:action="'/keluarga/ubah' + ${keluarga.nomor_kk}" method="post">
+			<form th:object="${keluarga}" th:action="'/keluarga/ubah/' + ${keluarga.nomor_kk}" method="post">
 				<input type="hidden" th:field="*{nomor_kk}"/>
 				<input type="hidden" th:field="*{id}"/>
 				<div>
